@@ -31,7 +31,7 @@ class DashboardViewModel(
 
     fun startSimulation() {
         viewModelScope.launch {
-            simulator.startSimulation()
+            // simulator.startSimulation() // DISABLED: Using Real DNS Traffic
         }
     }
 
