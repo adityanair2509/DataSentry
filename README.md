@@ -194,10 +194,13 @@ This project is created for educational/hackathon purposes. Use at your own disc
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-**Aditya Nair**  
-GitHub: [@adityanair2509](https://github.com/adityanair2509)
+**Team Members:**
+- **Aditya Nair** - [@adityanair2509](https://github.com/adityanair2509)
+- **Hridayshri Dave**
+- **Tanay Sagar**
+- **Bhagirath**
 
 ---
 
