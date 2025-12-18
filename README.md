@@ -222,4 +222,5 @@ This project is created for educational/hackathon purposes. Use at your own disc
 
 ---
 
-**Built with ❤️ for privacy-conscious mobile users**
+**Built with ❤️ From Overwatchers**
+
