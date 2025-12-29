@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-49:12
-INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-49:12
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-63:12
+INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:2:1-63:12
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\adity\.gradle\caches\transforms-3\56af212e940d1f2bde023f0cf7bfa9c5\transformed\material-1.11.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\a57c5491f12a15dd530f3c5c8facf49e\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\adity\.gradle\caches\transforms-3\413ce96def55d7f8b47d00364302c96f\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
@@ -109,9 +109,19 @@ uses-permission#android.permission.POST_NOTIFICATIONS
 ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:9:5-77
 	android:name
 		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:9:22-74
+uses-permission#android.permission.PACKAGE_USAGE_STATS
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:12:5-13:47
+	tools:ignore
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:13:9-44
+	android:name
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:12:22-75
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:14:5-81
+	android:name
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:14:22-78
 application
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:11:5-47:19
-INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:11:5-47:19
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:16:5-61:19
+INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:16:5-61:19
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\adity\.gradle\caches\transforms-3\56af212e940d1f2bde023f0cf7bfa9c5\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.11.0] C:\Users\adity\.gradle\caches\transforms-3\56af212e940d1f2bde023f0cf7bfa9c5\transformed\material-1.11.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\adity\.gradle\caches\transforms-3\413ce96def55d7f8b47d00364302c96f\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
@@ -139,65 +149,77 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\adity\.gradle\cach
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:18:9-35
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:23:9-35
 	android:label
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:16:9-41
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:21:9-41
 	android:fullBackupContent
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:14:9-54
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:19:9-54
 	android:roundIcon
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:17:9-63
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:22:9-63
 	tools:targetApi
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:20:9-29
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:25:9-29
 	android:icon
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:15:9-58
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:20:9-58
 	android:allowBackup
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:12:9-35
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:17:9-35
 	android:theme
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:19:9-48
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:24:9-48
 	android:dataExtractionRules
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:13:9-65
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:18:9-65
 activity#com.datasentry.app.MainActivity
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:23:9-32:20
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:28:9-37:20
 	android:label
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:26:13-45
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:31:13-45
 	android:exported
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:25:13-36
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:30:13-36
 	android:theme
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:27:13-52
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:32:13-52
 	android:name
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:24:13-41
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:29:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:28:13-31:29
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:33:13-36:29
 action#android.intent.action.MAIN
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:29:17-69
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:34:17-69
 	android:name
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:29:25-66
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:34:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:30:17-77
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:35:17-77
 	android:name
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:30:27-74
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:35:27-74
 service#com.datasentry.app.DataSentryService
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:35:9-46:19
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:40:9-51:19
 	android:exported
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:38:13-36
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:43:13-36
 	android:permission
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:37:13-69
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:42:13-69
 	android:foregroundServiceType
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:39:13-55
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:44:13-55
 	android:name
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:36:13-46
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:41:13-46
 intent-filter#action:name:android.net.VpnService
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:40:13-42:29
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:45:13-47:29
 action#android.net.VpnService
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:41:17-65
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:46:17-65
 	android:name
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:41:25-62
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:46:25-62
 property
-ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:43:13-45:58
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:48:13-50:58
 	android:value
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:45:17-55
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:50:17-55
 	android:name
-		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:44:17-76
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:49:17-76
+receiver#com.datasentry.app.receiver.BootCompletedReceiver
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:54:9-60:20
+	android:exported
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:56:13-36
+	android:name
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:55:13-59
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:57:13-59:29
+action#android.intent.action.BOOT_COMPLETED
+ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:58:17-79
+	android:name
+		ADDED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml:58:25-76
 uses-sdk
 INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\AndroidProjects\DataSentry\app\src\main\AndroidManifest.xml

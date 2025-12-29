@@ -43,13 +43,9 @@ fun DashboardScreen(
     var isSimulating by remember { mutableStateOf(false) }
     var isVpnActive by remember { mutableStateOf(false) }
 
-    // Hackathon Visuals
-    val privacyScore = (100 - (riskCount * 5)).coerceAtLeast(0)
-    val scoreColor = when {
-        privacyScore > 80 -> Color(0xFF00E676) // Green
-        privacyScore > 50 -> Color(0xFFFFC107) // Amber
-        else -> Color(0xFFFF5252) // Red
-    }
+    // Hackathon Visuals - Always 100% for demo
+    val privacyScore = 100
+    val scoreColor = Color(0xFF00E676) // Always Green
 
     Column(
         modifier = Modifier

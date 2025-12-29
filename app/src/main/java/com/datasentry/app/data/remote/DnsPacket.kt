@@ -25,7 +25,7 @@ data class DnsPacket(
                 val nsCount = buffer.short // Authority Count
                 val arCount = buffer.short // Additional Count
 
-                // We only care about Questions (Queries)
+             
                 val questions = ArrayList<DnsQuestion>()
                 for (i in 0 until qdCount) {
                     val name = parseName(buffer)

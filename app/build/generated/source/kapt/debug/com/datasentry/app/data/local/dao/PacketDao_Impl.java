@@ -91,8 +91,7 @@ public final class PacketDao_Impl implements PacketDao {
   }
 
   @Override
-  public Object insertPacket(final PacketEntity packet,
-      final Continuation<? super Unit> $completion) {
+  public Object insertPacket(final PacketEntity packet, final Continuation<? super Unit> arg1) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -106,11 +105,11 @@ public final class PacketDao_Impl implements PacketDao {
           __db.endTransaction();
         }
       }
-    }, $completion);
+    }, arg1);
   }
 
   @Override
-  public Object clearAll(final Continuation<? super Unit> $completion) {
+  public Object clearAll(final Continuation<? super Unit> arg0) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       @NonNull
@@ -129,7 +128,7 @@ public final class PacketDao_Impl implements PacketDao {
           __preparedStmtOfClearAll.release(_stmt);
         }
       }
-    }, $completion);
+    }, arg0);
   }
 
   @Override

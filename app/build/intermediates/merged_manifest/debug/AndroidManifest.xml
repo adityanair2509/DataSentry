@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- App Usage Tracking Permissions -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <permission
         android:name="com.datasentry.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
@@ -61,6 +65,15 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="VPN traffic monitoring" />
         </service>
+
+        <!-- Boot Completed Receiver -->
+        <receiver
+            android:name="com.datasentry.app.receiver.BootCompletedReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="androidx.compose.ui.tooling.PreviewActivity"
