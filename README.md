@@ -39,10 +39,6 @@ In an era where mobile applications constantly communicate with remote servers, 
 - **Accurate App Icons**: Displays real app icons instead of heuristic-based guessing
 - **Traffic Correlation**: Matches DNS queries to apps based on traffic deltas
 
-### Demo Data Removal
-- Removed all hardcoded demo scenarios
-- 100% real network traffic monitoring
-- No simulated or fake data
 
 ### Session-Based Analysis
 - Groups packets into meaningful app sessions
