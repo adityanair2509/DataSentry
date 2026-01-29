@@ -39,8 +39,15 @@ class SessionAggregator(private val packetRepository: PacketRepository) {
     suspend fun getAppSessions(): List<AppSession> {
         val allPackets = packetRepository.allPackets.first()
         
+        // Filter out DataSentry's own traffic
+        val filteredPackets = allPackets.filter { packet ->
+            !packet.packageName.contains("datasentry", ignoreCase = true) &&
+            !packet.appName.contains("datasentry", ignoreCase = true) &&
+            !packet.appName.equals("DataSentry", ignoreCase = true)
+        }
+        
         // Group by app
-        val byApp = allPackets.groupBy { it.appName }
+        val byApp = filteredPackets.groupBy { it.appName }
         
         return byApp.flatMap { (appName, packets) ->
             createSessionsFromPackets(appName, packets)

@@ -1,4 +1,4 @@
-od# DataSentry 🛡️
+# DataSentry 🛡️
 
 <div align="center">
 
@@ -17,17 +17,37 @@ od# DataSentry 🛡️
 
 ## 📖 Overview
 
-DataSentry is a sophisticated Android application that provides deep packet inspection and network traffic analysis capabilities. Built on Android's VpnService API, it creates a local VPN tunnel to intercept all network traffic, enabling comprehensive monitoring of app communications, data flows, and potential privacy threats.
+DataSentry is a sophisticated Android application that provides DNS-based network traffic analysis capabilities. Built on Android's VpnService API, it creates a local VPN tunnel to intercept DNS queries, enabling comprehensive monitoring of app communications, data flows, and potential privacy threats.
 
 ### Why DataSentry?
 
 In an era where mobile applications constantly communicate with remote servers, users have little visibility into what data is being transmitted. DataSentry bridges this gap by providing:
 
-- **Complete Traffic Visibility**: See every network connection your device makes
-- **App-Level Attribution**: Know which applications are sending data
-- **Content Classification**: Automatic detection of traffic types (video, images, text, telemetry)
+- **Complete DNS Visibility**: See every domain your device connects to
+- **Real App Attribution**: Know exactly which apps are sending data using TrafficStats API
+- **Session-Based Analysis**: Traffic grouped into meaningful app sessions
+- **Tracker Detection**: Automatic identification of analytics, ads, and telemetry domains
 - **Privacy Scoring**: Real-time assessment of your device's privacy health
-- **Persistent Logging**: Historical analysis of all network activity
+- **Real App Icons**: Display actual app icons via package name resolution
+
+---
+
+## 🆕 Recent Updates
+
+### TrafficStats-Based App Identification
+- **Real Package Detection**: Uses Android's TrafficStats API to identify which app generates each network request
+- **Accurate App Icons**: Displays real app icons instead of heuristic-based guessing
+- **Traffic Correlation**: Matches DNS queries to apps based on traffic deltas
+
+### Demo Data Removal
+- Removed all hardcoded demo scenarios
+- 100% real network traffic monitoring
+- No simulated or fake data
+
+### Session-Based Analysis
+- Groups packets into meaningful app sessions
+- Privacy impact scoring (Low/Medium/High)
+- Tracker detection with known pattern matching
 
 ---
 
@@ -48,12 +68,12 @@ DataSentry follows **Clean Architecture** principles with clear separation of co
 ┌─────────────────────────────────────────────────────────────────┐
 │                        DOMAIN LAYER                              │
 │  ┌─────────────────────┐    ┌─────────────────────────────────┐│
-│  │  DataSentryService  │    │       TrafficInspector          ││
-│  │    (VpnService)     │───►│   (Packet Analysis Engine)      ││
+│  │  DataSentryService  │    │       DnsOnlyHandler            ││
+│  │    (VpnService)     │───►│   (DNS Query Capture)           ││
 │  └─────────────────────┘    └─────────────────────────────────┘│
 │  ┌─────────────────────┐    ┌─────────────────────────────────┐│
-│  │  DemoScenarioEngine │    │        AnalysisResult           ││
-│  │ (Traffic Profiling) │    │    (Analysis Data Model)        ││
+│  │  TrafficStatsHelper │    │      SessionAggregator          ││
+│  │ (Per-App Tracking)  │    │  (Session-Based Analysis)       ││
 │  └─────────────────────┘    └─────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
                                     │
@@ -65,8 +85,8 @@ DataSentry follows **Clean Architecture** principles with clear separation of co
 │  │      (Room)         │◄───│    (Data Access Layer)          ││
 │  └─────────────────────┘    └─────────────────────────────────┘│
 │  ┌─────────────────────┐    ┌─────────────────────────────────┐│
-│  │    PacketEntity     │    │    FlowStats / SuspiciousEvent  ││
-│  │   (Traffic Log)     │    │     (Analysis Metrics)          ││
+│  │    PacketEntity     │    │     AppSession Model            ││
+│  │   (Traffic Log)     │    │   (Aggregated Sessions)         ││
 │  └─────────────────────┘    └─────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -80,110 +100,58 @@ DataSentry follows **Clean Architecture** principles with clear separation of co
 The heart of the application. This service extends `VpnService` to create a local VPN tunnel.
 
 **Key Responsibilities:**
-- Establishes VPN interface using `VpnService.Builder`
+- Establishes VPN interface for DNS-only capture
 - Manages foreground service with persistent notification
-- Coordinates packet inspection and logging
+- Coordinates with DnsOnlyHandler for query logging
 - Handles service lifecycle (start/stop/revoke)
 
-```kotlin
-// VPN Interface Configuration
-val builder = Builder()
-    .setSession("DataSentry Traffic Monitor")
-    .addAddress("10.0.0.2", 32)  // Virtual interface IP
-    .setBlocking(false)
+### 2. DnsOnlyHandler.kt - DNS Query Capture
 
-vpnInterface = builder.establish()
-```
-
-**Service Commands:**
-- `ACTION_STOP`: Gracefully terminates VPN monitoring
-- Default: Starts VPN and begins traffic analysis
-
-### 2. TrafficInspector.kt - Packet Analysis Engine
-
-Performs deep packet inspection on intercepted traffic.
+Captures and forwards DNS queries while logging domain requests.
 
 **Capabilities:**
-- IPv4 packet parsing (version, IHL, protocol detection)
-- TCP/UDP header extraction (ports, flags)
-- DNS query/response parsing (RFC 1035)
-- Traffic flow aggregation and statistics
+- DNS query interception (UDP port 53)
+- Domain name extraction from DNS packets
+- Real-time logging to Room database
+- TrafficStats integration for app identification
+
+### 3. TrafficStatsHelper.kt - Per-App Traffic Tracking
+
+Uses Android's TrafficStats API for real app identification.
+
+**Features:**
+- `getActiveApps()`: Find apps with recent traffic
+- `findMostActiveApp(domain)`: Correlate domains to apps
+- Per-app byte counting (rx/tx)
+- Package name resolution for icon loading
 
 ```kotlin
-fun inspect(packet: ByteArray, uid: Int) {
-    val version = (packet[0].toInt() and 0xFF) ushr 4
-    val protocol = packet[9].toInt() and 0xFF  // TCP=6, UDP=17
-    val srcIp = extractIpv4(packet, 12)
-    val dstIp = extractIpv4(packet, 16)
-    // ... analysis continues
+fun findMostActiveApp(domainHint: String?): AppTrafficInfo? {
+    // Match domain to known packages
+    // Fall back to most active app by traffic delta
 }
 ```
 
-### 3. DemoScenarioEngine.kt - Traffic Profiling
+### 4. SessionAggregator.kt - Session Analysis
 
-Implements intelligent traffic classification based on destination patterns.
+Groups packets into meaningful app sessions with privacy scoring.
 
-**Detection Heuristics:**
-| IP Pattern | Application | Traffic Type |
-|------------|-------------|--------------|
-| `172.217.*`, `142.250.*` | YouTube | VIDEO_STREAM_4K |
-| `104.16.*`, `104.17.*` | Cloudflare CDN | WEB_NAVIGATION |
-| `142.251.*`, `74.125.*` | Google Services | BACKGROUND_TELEMETRY |
+**Analysis Features:**
+- Session timeout detection (2 min inactivity)
+- Tracker pattern matching
+- Privacy impact scoring (Low/Medium/High)
+- Domain and data size aggregation
 
-```kotlin
-object DemoScenarioEngine {
-    fun getScenarioByIp(destIp: String): AnalysisResult? {
-        return when {
-            destIp.startsWith("172.217.") -> scenarios["com.google.android.youtube"]
-            destIp.startsWith("104.16.") -> scenarios["com.android.chrome"]
-            // ... pattern matching
-        }
-    }
-}
-```
-
-### 4. AppDatabase.kt - Persistence Layer
+### 5. AppDatabase.kt - Persistence Layer
 
 Room database for storing all traffic logs and analysis results.
-
-**Entities:**
-- `PacketEntity`: Individual packet logs with metadata
-- `FlowStats`: Aggregated traffic statistics per app
-- `SuspiciousEvent`: Flagged security concerns
 
 ```kotlin
 @Database(
     entities = [PacketEntity::class, FlowStats::class, SuspiciousEvent::class],
-    version = 3
+    version = 4
 )
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun packetDao(): PacketDao
-    abstract fun flowStatsDao(): FlowStatsDao
-    abstract fun suspiciousEventDao(): SuspiciousEventDao
-}
-```
-
-### 5. DashboardScreen.kt - Real-Time UI
-
-Modern Compose UI with live traffic visualization.
-
-**UI Components:**
-- Privacy Health Score with animated radar visualization
-- Live traffic list with app attribution
-- Content type badges (Video 4K, Image, Text, Telemetry)
-- Start/Stop monitoring controls
-
-```kotlin
-@Composable
-fun DashboardScreen(viewModel: DashboardViewModel) {
-    val packets by viewModel.packets.collectAsState()
-    
-    LazyColumn {
-        items(packets) { packet ->
-            PacketItem(packet)  // Real-time updates via Flow
-        }
-    }
-}
+abstract class AppDatabase : RoomDatabase()
 ```
 
 ---
@@ -196,23 +164,27 @@ data class PacketEntity(
     val id: Long,
     val timestamp: Long,
     val sourceIp: String,
-    val destIp: String,
-    val protocol: String,      // TCP, UDP, ICMP
+    val destIp: String,        // Domain name
+    val protocol: String,       // DNS
     val sizeBytes: Int,
-    val appName: String,       // YouTube, Chrome, System
-    val contentType: String,   // Video 4K, Image, Text
-    val isRisk: Boolean
+    val appName: String,        // From TrafficStats
+    val packageName: String,    // Real package for icon loading
+    val contentType: String,    // Video, Social, Web, etc.
+    val isRisk: Boolean         // Tracker detected
 )
 ```
 
-### AnalysisResult
+### AppSession
 ```kotlin
-data class AnalysisResult(
+data class AppSession(
+    val appName: String,
     val packageName: String,
-    val trafficType: String,   // VIDEO_STREAM_4K, WEB_NAVIGATION
-    val server: String,        // "Google Video Cache (Mountain View, US)"
-    val riskScore: Int,        // 0-100
-    val insight: String        // Analysis description
+    val startTime: Long,
+    val endTime: Long,
+    val domains: Set<String>,
+    val trackers: List<String>,
+    val totalBytes: Long,
+    val privacyImpact: PrivacyImpact  // LOW, MEDIUM, HIGH
 )
 ```
 
@@ -252,11 +224,12 @@ cd DataSentry
 
 ## 🔒 Security & Privacy
 
-DataSentry operates entirely **on-device**:
-- No data is transmitted to external servers
-- All analysis happens locally
+DataSentry operates with a **metadata-only approach**:
+- Captures DNS queries (domain names), not encrypted content
+- All analysis happens locally on-device
 - Traffic logs are stored in private app storage
 - VPN tunnel terminates on the device itself
+- Optional backend analytics via Linux server
 
 ---
 
@@ -267,32 +240,52 @@ app/src/main/java/com/datasentry/app/
 ├── MainActivity.kt                 # Entry point, VPN permission handling
 ├── DataSentryService.kt           # Core VPN service implementation
 │
+├── vpn/
+│   ├── DnsOnlyHandler.kt          # DNS query capture and forwarding
+│   ├── TrafficStatsHelper.kt      # Per-app traffic tracking
+│   └── PacketParser.kt            # IP/UDP packet parsing
+│
+├── analysis/
+│   └── SessionAggregator.kt       # Session-based analysis engine
+│
 ├── data/
 │   ├── local/
-│   │   ├── AppDatabase.kt         # Room database configuration
+│   │   ├── AppDatabase.kt         # Room database (v4)
 │   │   ├── entity/
-│   │   │   └── PacketEntity.kt    # Traffic log data model
+│   │   │   └── PacketEntity.kt    # Traffic log with packageName
 │   │   └── dao/
 │   │       └── PacketDao.kt       # Database operations
 │   ├── model/
-│   │   ├── FlowStats.kt           # Traffic statistics
-│   │   ├── SuspiciousEvent.kt     # Security alerts
-│   │   └── RiskLevel.kt           # Risk classification enum
+│   │   ├── AppSession.kt          # Session data model
+│   │   └── RiskLevel.kt           # Risk classification
 │   └── repository/
 │       └── PacketRepository.kt    # Data access abstraction
 │
-├── demo/
-│   ├── AnalysisResult.kt          # Analysis result model
-│   └── DemoScenarioEngine.kt      # Traffic profiling engine
-│
-├── inspector/
-│   └── TrafficInspector.kt        # Deep packet inspection
+├── network/
+│   └── AnalyticsClient.kt         # Optional server upload
 │
 └── presentation/
-    └── dashboard/
-        ├── DashboardScreen.kt     # Compose UI
-        └── DashboardViewModel.kt  # UI state management
+    ├── dashboard/
+    │   ├── DashboardScreen.kt     # Main Compose UI
+    │   └── DashboardViewModel.kt  # UI state management
+    └── components/
+        ├── SessionCard.kt         # Session display card
+        └── AppIcon.kt             # Real app icon loader
 ```
+
+---
+
+## 🖥️ Linux Server (Optional)
+
+Backend server for advanced analytics:
+
+```bash
+cd linux_server
+pip install -r requirements.txt
+python app.py
+```
+
+See `linux_server/README.md` for setup details.
 
 ---
 
@@ -305,8 +298,9 @@ app/src/main/java/com/datasentry/app/
 | Architecture | MVVM + Clean Architecture |
 | Database | Room 2.6.1 |
 | Async | Coroutines + Flow |
-| Network | Android VpnService API |
+| Network | Android VpnService + TrafficStats API |
 | Build | Gradle 8.2.2 (Kotlin DSL) |
+| Backend | Python/Flask (optional) |
 
 ---
 
