@@ -27,7 +27,11 @@ In an era where mobile applications constantly communicate with remote servers, 
 - **App-Level Attribution**: Know which applications are sending data
 - **Content Classification**: Automatic detection of traffic types (video, images, text, telemetry)
 - **Privacy Scoring**: Real-time assessment of your device's privacy health
-- **Persistent Logging**: Historical analysis of all network activity
+- **Persistent Logging**: Historical analysis of all network activity with AES-256 encryption
+- **VirusTotal Integration**: Automated threat intelligence for domains and files (non-technical user friendly)
+- **Behavior Pattern Analysis**: Advanced ML-based detection of anomalous domain access patterns
+- **Smart Alerts**: Real-time notifications for harmful apps and suspicious domains
+- **Transparent Data Collection**: Clear disclosure when server analytics are enabled
 
 ---
 
@@ -70,6 +74,66 @@ DataSentry follows **Clean Architecture** principles with clear separation of co
 │  └─────────────────────┘    └─────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## ✨ Features
+
+### 🔐 Security & Privacy
+
+#### AES-256 Encryption
+All sensitive data is protected with military-grade encryption:
+- **App-Side Encryption**: Traffic logs are encrypted before storage using Android Keystore
+- **Server-Side Encryption**: Database is secured with SQLCipher and AES-256 encryption
+- **Encrypted Transmission**: All data sent to the analytics server is encrypted end-to-end
+- **Secure Key Management**: Encryption keys are generated and stored securely using Android Keystore API
+
+#### VirusTotal Integration
+Non-technical users get enterprise-grade threat intelligence:
+- **Automatic Domain Scanning**: All contacted domains are checked against VirusTotal's database
+- **File Hash Analysis**: Downloads and transferred files are analyzed for malware signatures
+- **User-Friendly Reports**: Complex security data presented in simple, actionable insights
+- **Background Processing**: Scans happen automatically without user intervention
+- **Rate Limiting**: Intelligent caching to stay within API limits
+
+### 🧠 Advanced Analysis
+
+#### Behavior Pattern Analysis
+Machine learning-powered detection of suspicious activity:
+- **Domain Access Patterns**: Identifies unusual frequency, timing, or volume of domain requests
+- **Anomaly Detection**: Flags deviations from normal app behavior baselines
+- **Cross-App Correlation**: Detects coordinated activity across multiple applications
+- **Temporal Analysis**: Identifies suspicious late-night or recurring patterns
+- **Risk Scoring**: Each domain is assigned a dynamic risk score based on behavior
+
+#### Real-Time Processing
+Users get instant feedback on network activity:
+- **Live Traffic Updates**: Sub-second latency between packet capture and UI display
+- **Processing Status Indicators**: Visual feedback showing analysis progress
+- **Background Queue Management**: Efficient handling of high-volume traffic
+- **Progressive Analysis**: Critical threats are identified and alerted immediately
+
+### 🎨 UI/UX Enhancements
+
+#### Smart Notifications & Alerts
+Keep users informed without overwhelming them:
+- **Threat Severity Levels**: Color-coded alerts (Critical/High/Medium/Low)
+- **Actionable Notifications**: One-tap actions to block apps or domains
+- **Alert Grouping**: Similar alerts are intelligently grouped to reduce noise
+- **Persistent Heads-Up**: Critical threats show as priority notifications
+- **Customizable Thresholds**: Users can configure alert sensitivity
+
+#### Transparent Data Collection
+When server analytics are enabled, users have full visibility:
+- **Pre-Connection Disclosure**: Clear explanation shown before enabling server mode
+- **Data Collection Manifest**: Detailed list of what data will be sent to the server
+  - Packet metadata (timestamps, sizes, protocols)
+  - Domain names and IP addresses
+  - App package names and versions
+  - Device model and OS version (anonymized)
+- **One-Tap Opt-Out**: Easy toggle to disable server analytics at any time
+- **Data Retention Policy**: Clear statement on how long data is stored
+- **No Personal Data**: Guarantee that content payloads and personal info are never collected
 
 ---
 
@@ -244,19 +308,43 @@ cd DataSentry
 ### First Launch
 
 1. Grant VPN permission when prompted
-2. Tap **"ACTIVATE FIREWALL"** to start monitoring
-3. Use your device normally - traffic logs appear in real-time
-4. Tap **"DEACTIVATE FIREWALL"** to stop
+2. Review the app permissions and data collection disclosure
+3. **Optional**: Enable server analytics for advanced cloud-based analysis
+   - Tap **Settings** → **Server Analytics**
+   - Review the **Data Collection Manifest** showing exactly what will be sent:
+     - Network metadata (no payload content)
+     - Anonymized device information
+     - App package names and versions
+   - Toggle **Enable Server Mode** if you consent
+4. Tap **"ACTIVATE FIREWALL"** to start monitoring
+5. Watch real-time processing updates as traffic is analyzed
+6. Receive instant notifications for suspicious apps or domains
+7. Tap **"DEACTIVATE FIREWALL"** to stop
+
+### Real-Time Features
+
+Once activated, you'll see:
+- **Live Traffic Feed**: Packets appear instantly with color-coded risk indicators
+- **Processing Status**: Visual indicators showing analysis progress
+- **Smart Alerts**: Notifications for high-risk domains or suspicious behavior
+- **Privacy Score**: Dynamic health score that updates based on current activity
+- **VirusTotal Results**: Automatic threat intelligence checks (when available)
 
 ---
 
 ## 🔒 Security & Privacy
 
-DataSentry operates entirely **on-device**:
-- No data is transmitted to external servers
-- All analysis happens locally
-- Traffic logs are stored in private app storage
-- VPN tunnel terminates on the device itself
+DataSentry is designed with privacy-first principles:
+- **Local-First Architecture**: All analysis happens on-device by default
+- **AES-256 Encryption**: Traffic logs and databases are encrypted with military-grade encryption
+- **Secure Key Storage**: Encryption keys managed via Android Keystore (hardware-backed)
+- **Transparent Server Mode**: When server analytics are enabled, users are clearly informed
+  - Pre-connection disclosure of all data collection
+  - Detailed manifest of what data is sent
+  - One-tap opt-out at any time
+- **No Content Inspection**: Only packet metadata is analyzed, never payload content
+- **Private App Storage**: All local data stored in app-private directories
+- **No Third-Party Tracking**: VirusTotal integration uses secure API calls only
 
 ---
 
@@ -303,10 +391,15 @@ app/src/main/java/com/datasentry/app/
 | Language | Kotlin 1.9.22 |
 | UI Framework | Jetpack Compose (Material3) |
 | Architecture | MVVM + Clean Architecture |
-| Database | Room 2.6.1 |
+| Database | Room 2.6.1 + SQLCipher |
+| Encryption | AES-256 (Android Keystore) |
 | Async | Coroutines + Flow |
 | Network | Android VpnService API |
+| Threat Intelligence | VirusTotal API v3 |
+| Machine Learning | TensorFlow Lite (Behavior Analysis) |
+| Notification | Android NotificationManager API |
 | Build | Gradle 8.2.2 (Kotlin DSL) |
+| Server | Python 3.10+ (Linux Analytics Server) |
 
 ---
 
