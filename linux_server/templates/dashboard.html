@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataSentry Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #00ffcc;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header .status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 204, 0.2);
+        }
+
+        .stat-card h3 {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ffcc;
+        }
+
+        .stat-card .change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .change.positive { color: #00ff88; }
+        .change.negative { color: #ff4444; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chart-card h2 {
+            color: #00ffcc;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .threats-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .threats-section h2 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+
+        .threat-item {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+        }
+
+        .threat-item.high {
+            border-left-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .threat-item.critical {
+            border-left-color: #ff0000;
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .threat-domain {
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .threat-details {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .domains-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .domains-section h2 {
+            color: #00ffcc;
+            margin-bottom: 1rem;
+        }
+
+        .domain-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .domain-item:last-child {
+            border-bottom: none;
+        }
+
+        .domain-info {
+            flex: 1;
+        }
+
+        .domain-name {
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 0.2rem;
+        }
+
+        .domain-meta {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .risk-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .risk-low { background: #00ff88; color: #000; }
+        .risk-medium { background: #ffaa00; color: #000; }
+        .risk-high { background: #ff6b6b; color: #fff; }
+        .risk-critical { background: #ff0000; color: #fff; }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #888;
+        }
+
+        .error {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #ff4444;
+        }
+
+        .refresh-btn {
+            background: #00ffcc;
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #00ccaa;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <span class="status"></span>
+            DataSentry Analysis Dashboard
+        </h1>
+    </div>
+
+    <div class="container">
+        <!-- Overview Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="loading">Loading statistics...</div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h2>Traffic Timeline</h2>
+                <div class="chart-container">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h2>Risk Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Threats -->
+        <div class="threats-section">
+            <h2>🚨 Recent Threats</h2>
+            <div id="threatsList">
+                <div class="loading">Loading threats...</div>
+            </div>
+        </div>
+
+        <!-- Recent Domains -->
+        <div class="domains-section">
+            <h2>📡 Recent Domains</h2>
+            <button class="refresh-btn" onclick="refreshData()">Refresh Data</button>
+            <div id="domainsList" style="margin-top: 1rem;">
+                <div class="loading">Loading domains...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timelineChart, riskChart;
+
+        async function fetchDashboardData() {
+            try {
+                const response = await axios.get('/api/dashboard/data');
+                return response.data;
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                return null;
+            }
+        }
+
+        function updateStats(stats) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <h3>Total Queries</h3>
+                    <div class="value">${stats.total_queries?.toLocaleString() || 0}</div>
+                    <div class="change positive">Last 24 hours</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Unique Domains</h3>
+                    <div class="value">${stats.unique_domains?.toLocaleString() || 0}</div>
+                    <div class="change positive">Discovered</div>
+                </div>
+                <div class="stat-card">
+                    <h3>High Risk Domains</h3>
+                    <div class="value">${stats.high_risk_domains || 0}</div>
+                    <div class="change negative">Requires attention</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Privacy Score</h3>
+                    <div class="value">${stats.privacy_score || 100}%</div>
+                    <div class="change positive">Device protected</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Recent Threats</h3>
+                    <div class="value">${stats.recent_threats || 0}</div>
+                    <div class="change negative">Last 24 hours</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Devices</h3>
+                    <div class="value">${stats.active_devices || 0}</div>
+                    <div class="change positive">Currently monitoring</div>
+                </div>
+            `;
+        }
+
+        function updateTimelineChart(data) {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            if (timelineChart) {
+                timelineChart.destroy();
+            }
+
+            timelineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => new Date(item.time).toLocaleTimeString()),
+                    datasets: [{
+                        label: 'DNS Queries',
+                        data: data.map(item => item.queries),
+                        borderColor: '#00ffcc',
+                        backgroundColor: 'rgba(0, 255, 204, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Unique Domains',
+                        data: data.map(item => item.domains),
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#888' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#888' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateRiskChart(data) {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            
+            if (riskChart) {
+                riskChart.destroy();
+            }
+
+            riskChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(data),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: [
+                            '#00ff88',
+                            '#ffaa00',
+                            '#ff6b6b',
+                            '#ff0000'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#ffffff' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateThreats(threats) {
+            const threatsList = document.getElementById('threatsList');
+            
+            if (threats.length === 0) {
+                threatsList.innerHTML = '<div style="text-align: center; color: #00ff88;">✅ No threats detected</div>';
+                return;
+            }
+
+            threatsList.innerHTML = threats.map(threat => `
+                <div class="threat-item ${threat.severity.toLowerCase()}">
+                    <div class="threat-domain">${threat.domain}</div>
+                    <div class="threat-details">
+                        <strong>Type:</strong> ${threat.threat_type} | 
+                        <strong>Risk Score:</strong> ${threat.risk_score}/100 | 
+                        <strong>Detected:</strong> ${new Date(threat.detected_at).toLocaleString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateDomains(domains) {
+            const domainsList = document.getElementById('domainsList');
+            
+            domainsList.innerHTML = domains.map(domain => `
+                <div class="domain-item">
+                    <div class="domain-info">
+                        <div class="domain-name">${domain.domain}</div>
+                        <div class="domain-meta">
+                            Queries: ${domain.query_count} | 
+                            Last seen: ${new Date(domain.last_seen).toLocaleString()}
+                        </div>
+                    </div>
+                    <div class="risk-badge risk-${domain.risk_level.toLowerCase()}">
+                        ${domain.risk_level}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function refreshData() {
+            const data = await fetchDashboardData();
+            if (data) {
+                updateStats(data.overview);
+                updateTimelineChart(data.timeline_data || []);
+                updateRiskChart(data.risk_distribution || {});
+                updateThreats(data.top_threats || []);
+                updateDomains(data.recent_domains || []);
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshData();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(refreshData, 30000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataSentry Server Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            color: #34495e;
+            font-size: 1em;
+        }
+        
+        .total-domains { border-left: 5px solid #3498db; }
+        .total-domains .stat-number { color: #3498db; }
+        
+        .risk-domains { border-left: 5px solid #e74c3c; }
+        .risk-domains .stat-number { color: #e74c3c; }
+        
+        .storage-used { border-left: 5px solid #f39c12; }
+        .storage-used .stat-number { color: #f39c12; }
+        
+        .last-analysis { border-left: 5px solid #27ae60; }
+        .last-analysis .stat-number { color: #27ae60; }
+        
+        .actions {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .success {
+            background: rgba(39, 174, 96, 0.1);
+            border: 1px solid #27ae60;
+            color: #27ae60;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .refresh-time {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .panel h3 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        .table th, .table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .table th {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-risk {
+            background: rgba(231, 76, 60, 0.12);
+            color: #c0392b;
+        }
+
+        .badge-safe {
+            background: rgba(39, 174, 96, 0.12);
+            color: #1e8449;
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.92em;
+            word-break: break-word;
+        }
+
+        @media (max-width: 900px) {
+            .panels {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DataSentry Server Dashboard</h1>
+            <p>Real-time DNS Security Analysis Server</p>
+        </div>
+        
+        <div class="loading" id="loading">
+            <h3>Loading server statistics...</h3>
+        </div>
+        
+        <div class="error" id="error">
+            <h3>Error loading data</h3>
+            <p id="errorMessage"></p>
+        </div>
+        
+        <div class="success" id="success">
+            <h3>Success</h3>
+            <p id="successMessage"></p>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card total-domains">
+                <div class="stat-number" id="totalDomains">0</div>
+                <div class="stat-label">Total Domains</div>
+                <div class="stat-value">Analyzed domains</div>
+            </div>
+            
+            <div class="stat-card risk-domains">
+                <div class="stat-number" id="riskDomains">0</div>
+                <div class="stat-label">Risk Domains</div>
+                <div class="stat-value">Threats detected</div>
+            </div>
+            
+            <div class="stat-card storage-used">
+                <div class="stat-number" id="storageUsed">0 MB</div>
+                <div class="stat-label">Storage Used</div>
+                <div class="stat-value">Database size</div>
+            </div>
+            
+            <div class="stat-card last-analysis">
+                <div class="stat-number" id="lastAnalysis">Never</div>
+                <div class="stat-label">Last Analysis</div>
+                <div class="stat-value">Most recent scan</div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn" onclick="refreshStats()">Refresh Stats</button>
+            <button class="btn btn-danger" onclick="clearData()">Clear All Data</button>
+        </div>
+
+        <div class="panels">
+            <div class="panel">
+                <h3>Threat Severity</h3>
+                <canvas id="riskPie" height="170"></canvas>
+            </div>
+
+            <div class="panel">
+                <h3>Dangerous Sites</h3>
+                <table class="table" id="dangerousTable">
+                    <thead>
+                        <tr>
+                            <th>Domain</th>
+                            <th>Max Risk</th>
+                            <th>Hits</th>
+                            <th>Last Seen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dangerousBody"></tbody>
+                </table>
+            </div>
+
+            <div class="panel" style="grid-column: 1 / -1;">
+                <h3>Recent Sites (Real-time)</h3>
+                <table class="table" id="recentTable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Domain</th>
+                            <th>App</th>
+                            <th>Status</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="refresh-time" id="refreshTime">
+            Last updated: Never
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        const API_KEYS = ['datasentry-secure-api-key-2024', 'datasentry-quick-api-key-12345'];
+        let riskPieChart = null;
+
+        async function readErrorBody(response) {
+            try {
+                const contentType = (response.headers.get('content-type') || '').toLowerCase();
+                if (contentType.includes('application/json')) {
+                    const json = await response.json();
+                    return json.error || JSON.stringify(json);
+                }
+                return await response.text();
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function formatTimeFromSeconds(tsSeconds) {
+            try {
+                if (!tsSeconds) return '';
+                return new Date(tsSeconds * 1000).toLocaleString();
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function updateRiskPie(stats) {
+            const sev = stats?.severityData;
+            const low = sev?.low ?? 0;
+            const medium = sev?.medium ?? 0;
+            const severe = sev?.severe ?? 0;
+
+            const safe = stats?.pieData?.safeDomains ?? 0;
+            const risk = stats?.pieData?.riskDomains ?? 0;
+            const ctx = document.getElementById('riskPie');
+            if (!ctx) return;
+
+            const data = {
+                labels: sev ? ['Low', 'Medium', 'Severe'] : ['Safe domains', 'Risk domains'],
+                datasets: [{
+                    data: sev ? [low, medium, severe] : [safe, risk],
+                    backgroundColor: sev ? ['#27ae60', '#f39c12', '#e74c3c'] : ['#27ae60', '#e74c3c'],
+                    borderWidth: 0
+                }]
+            };
+
+            if (riskPieChart) {
+                riskPieChart.data = data;
+                riskPieChart.update();
+                return;
+            }
+
+            riskPieChart = new Chart(ctx, {
+                type: sev ? 'doughnut' : 'pie',
+                data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        async function fetchRecentSites() {
+            const body = document.getElementById('recentBody');
+            if (!body) return;
+            const response = await fetchWithAnyKey('/api/recent-sites?limit=25');
+            if (!response.ok) return;
+            const data = await response.json();
+
+            const rows = (data.items || []).map(item => {
+                const status = item.is_risk
+                    ? '<span class="badge badge-risk">RISK</span>'
+                    : '<span class="badge badge-safe">SAFE</span>';
+                return `
+                    <tr>
+                        <td>${formatTimeFromSeconds(item.timestamp)}</td>
+                        <td class="mono">${(item.domain || '')}</td>
+                        <td>${(item.app_name || '')}</td>
+                        <td>${status}</td>
+                        <td>${item.risk_score ?? 0}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            body.innerHTML = rows || '<tr><td colspan="5">No data</td></tr>';
+        }
+
+        async function fetchDangerousSites() {
+            const body = document.getElementById('dangerousBody');
+            if (!body) return;
+            const response = await fetchWithAnyKey('/api/dangerous-sites?limit=20');
+            if (!response.ok) return;
+            const data = await response.json();
+
+            const rows = (data.items || []).map(item => {
+                return `
+                    <tr>
+                        <td class="mono">${(item.domain || '')}</td>
+                        <td>${item.max_risk_score ?? 0}</td>
+                        <td>${item.hits ?? 0}</td>
+                        <td>${formatTimeFromSeconds(item.last_seen)}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            body.innerHTML = rows || '<tr><td colspan="4">No risky domains</td></tr>';
+        }
+
+        async function fetchWithAnyKey(path) {
+            let lastResponse = null;
+            for (const key of API_KEYS) {
+                const response = await fetch(`${API_BASE}${path}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-Key': key
+                    }
+                });
+
+                if (response.ok) {
+                    return response;
+                }
+
+                lastResponse = response;
+                if (response.status !== 401) {
+                    break;
+                }
+            }
+
+            return lastResponse;
+        }
+        
+        async function fetchStats() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const success = document.getElementById('success');
+            const statsGrid = document.getElementById('statsGrid');
+            
+            try {
+                loading.style.display = 'block';
+                error.style.display = 'none';
+                success.style.display = 'none';
+                statsGrid.style.opacity = '0.5';
+                
+                const response = await fetchWithAnyKey('/api/stats');
+                
+                if (!response.ok) {
+                    const body = await readErrorBody(response);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}${body ? ` - ${body}` : ''}`);
+                }
+                
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('totalDomains').textContent = data.totalDomains || 0;
+                document.getElementById('riskDomains').textContent = data.riskDomains || 0;
+                document.getElementById('storageUsed').textContent = data.storageUsed || '0 MB';
+                document.getElementById('lastAnalysis').textContent = data.lastAnalysis || 'Never';
+
+                updateRiskPie(data);
+                await Promise.all([
+                    fetchRecentSites(),
+                    fetchDangerousSites()
+                ]);
+                
+                // Update refresh time
+                document.getElementById('refreshTime').textContent = 
+                    `Last updated: ${new Date().toLocaleString()}`;
+                
+                loading.style.display = 'none';
+                statsGrid.style.opacity = '1';
+                
+            } catch (err) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+                document.getElementById('errorMessage').textContent = err.message;
+                statsGrid.style.opacity = '1';
+            }
+        }
+        
+        async function clearData() {
+            if (!confirm('Are you sure you want to clear ALL server data? This cannot be undone!')) {
+                return;
+            }
+            
+            const error = document.getElementById('error');
+            const success = document.getElementById('success');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/clear-data`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-API-Key': 'datasentry-secure-api-key-2024'
+                    }
+                });
+                
+                if (!response.ok) {
+                    const body = await readErrorBody(response);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}${body ? ` - ${body}` : ''}`);
+                }
+                
+                const result = await response.json();
+                
+                success.style.display = 'block';
+                document.getElementById('successMessage').textContent = result.message || 'Data cleared successfully';
+                error.style.display = 'none';
+                
+                // Refresh stats after clearing
+                setTimeout(fetchStats, 1000);
+                
+            } catch (err) {
+                error.style.display = 'block';
+                document.getElementById('errorMessage').textContent = err.message;
+                success.style.display = 'none';
+            }
+        }
+        
+        function refreshStats() {
+            fetchStats();
+        }
+        
+        // Auto-refresh every 30 seconds
+        setInterval(fetchStats, 30000);
+        
+        // Initial load
+        fetchStats();
+    </script>
+</body>
+</html>

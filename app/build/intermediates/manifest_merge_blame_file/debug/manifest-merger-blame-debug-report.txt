@@ -1,0 +1,223 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.datasentry.app"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="29"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- VPN Service Permissions -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\final app ver\app\src\main\AndroidManifest.xml:6:5-67
+12-->C:\final app ver\app\src\main\AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+13-->C:\final app ver\app\src\main\AndroidManifest.xml:7:5-77
+13-->C:\final app ver\app\src\main\AndroidManifest.xml:7:22-74
+14    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+14-->C:\final app ver\app\src\main\AndroidManifest.xml:8:5-89
+14-->C:\final app ver\app\src\main\AndroidManifest.xml:8:22-86
+15    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+15-->C:\final app ver\app\src\main\AndroidManifest.xml:9:5-77
+15-->C:\final app ver\app\src\main\AndroidManifest.xml:9:22-74
+16
+17    <!-- App Usage Tracking Permissions -->
+18    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+18-->C:\final app ver\app\src\main\AndroidManifest.xml:12:5-13:47
+18-->C:\final app ver\app\src\main\AndroidManifest.xml:12:22-75
+19    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+19-->C:\final app ver\app\src\main\AndroidManifest.xml:14:5-81
+19-->C:\final app ver\app\src\main\AndroidManifest.xml:14:22-78
+20
+21    <permission
+21-->[androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+22        android:name="com.datasentry.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+22-->[androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+23        android:protectionLevel="signature" />
+23-->[androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+24
+25    <uses-permission android:name="com.datasentry.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+25-->[androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+25-->[androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+26
+27    <application
+27-->C:\final app ver\app\src\main\AndroidManifest.xml:16:5-62:19
+28        android:allowBackup="true"
+28-->C:\final app ver\app\src\main\AndroidManifest.xml:17:9-35
+29        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+29-->[androidx.core:core:1.12.0] C:\Users\adity\.gradle\caches\transforms-3\d1e4a685b1001794fbcfe4ee9c157a7e\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+30        android:dataExtractionRules="@xml/data_extraction_rules"
+30-->C:\final app ver\app\src\main\AndroidManifest.xml:18:9-65
+31        android:debuggable="true"
+32        android:extractNativeLibs="false"
+33        android:fullBackupContent="@xml/backup_rules"
+33-->C:\final app ver\app\src\main\AndroidManifest.xml:19:9-54
+34        android:icon="@android:drawable/sym_def_app_icon"
+34-->C:\final app ver\app\src\main\AndroidManifest.xml:20:9-58
+35        android:label="@string/app_name"
+35-->C:\final app ver\app\src\main\AndroidManifest.xml:21:9-41
+36        android:networkSecurityConfig="@xml/network_security_config"
+36-->C:\final app ver\app\src\main\AndroidManifest.xml:25:9-69
+37        android:roundIcon="@android:drawable/sym_def_app_icon"
+37-->C:\final app ver\app\src\main\AndroidManifest.xml:22:9-63
+38        android:supportsRtl="true"
+38-->C:\final app ver\app\src\main\AndroidManifest.xml:23:9-35
+39        android:testOnly="true"
+40        android:theme="@style/Theme.DataSentry" >
+40-->C:\final app ver\app\src\main\AndroidManifest.xml:24:9-48
+41
+42        <!-- Main Activity -->
+43        <activity
+43-->C:\final app ver\app\src\main\AndroidManifest.xml:29:9-38:20
+44            android:name="com.datasentry.app.MainActivity"
+44-->C:\final app ver\app\src\main\AndroidManifest.xml:30:13-41
+45            android:exported="true"
+45-->C:\final app ver\app\src\main\AndroidManifest.xml:31:13-36
+46            android:label="@string/app_name"
+46-->C:\final app ver\app\src\main\AndroidManifest.xml:32:13-45
+47            android:theme="@style/Theme.DataSentry" >
+47-->C:\final app ver\app\src\main\AndroidManifest.xml:33:13-52
+48            <intent-filter>
+48-->C:\final app ver\app\src\main\AndroidManifest.xml:34:13-37:29
+49                <action android:name="android.intent.action.MAIN" />
+49-->C:\final app ver\app\src\main\AndroidManifest.xml:35:17-69
+49-->C:\final app ver\app\src\main\AndroidManifest.xml:35:25-66
+50
+51                <category android:name="android.intent.category.LAUNCHER" />
+51-->C:\final app ver\app\src\main\AndroidManifest.xml:36:17-77
+51-->C:\final app ver\app\src\main\AndroidManifest.xml:36:27-74
+52            </intent-filter>
+53        </activity>
+54
+55        <!-- VPN Service -->
+56        <service
+56-->C:\final app ver\app\src\main\AndroidManifest.xml:41:9-52:19
+57            android:name="com.datasentry.app.DataSentryService"
+57-->C:\final app ver\app\src\main\AndroidManifest.xml:42:13-46
+58            android:exported="true"
+58-->C:\final app ver\app\src\main\AndroidManifest.xml:44:13-36
+59            android:foregroundServiceType="specialUse"
+59-->C:\final app ver\app\src\main\AndroidManifest.xml:45:13-55
+60            android:permission="android.permission.BIND_VPN_SERVICE" >
+60-->C:\final app ver\app\src\main\AndroidManifest.xml:43:13-69
+61            <intent-filter>
+61-->C:\final app ver\app\src\main\AndroidManifest.xml:46:13-48:29
+62                <action android:name="android.net.VpnService" />
+62-->C:\final app ver\app\src\main\AndroidManifest.xml:47:17-65
+62-->C:\final app ver\app\src\main\AndroidManifest.xml:47:25-62
+63            </intent-filter>
+64
+65            <property
+65-->C:\final app ver\app\src\main\AndroidManifest.xml:49:13-51:58
+66                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+66-->C:\final app ver\app\src\main\AndroidManifest.xml:50:17-76
+67                android:value="VPN traffic monitoring" />
+67-->C:\final app ver\app\src\main\AndroidManifest.xml:51:17-55
+68        </service>
+69
+70        <!-- Boot Completed Receiver -->
+71        <receiver
+71-->C:\final app ver\app\src\main\AndroidManifest.xml:55:9-61:20
+72            android:name="com.datasentry.app.receiver.BootCompletedReceiver"
+72-->C:\final app ver\app\src\main\AndroidManifest.xml:56:13-59
+73            android:exported="true" >
+73-->C:\final app ver\app\src\main\AndroidManifest.xml:57:13-36
+74            <intent-filter>
+74-->C:\final app ver\app\src\main\AndroidManifest.xml:58:13-60:29
+75                <action android:name="android.intent.action.BOOT_COMPLETED" />
+75-->C:\final app ver\app\src\main\AndroidManifest.xml:59:17-79
+75-->C:\final app ver\app\src\main\AndroidManifest.xml:59:25-76
+76            </intent-filter>
+77        </receiver>
+78
+79        <activity
+79-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\a7768de155330695684d9ae90feea401\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
+80            android:name="androidx.compose.ui.tooling.PreviewActivity"
+80-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\a7768de155330695684d9ae90feea401\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
+81            android:exported="true" />
+81-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\a7768de155330695684d9ae90feea401\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
+82        <activity
+82-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\173befe764b4fcdb61e10d5ad380d40a\transformed\jetified-ui-test-manifest-1.6.1\AndroidManifest.xml:23:9-25:39
+83            android:name="androidx.activity.ComponentActivity"
+83-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\173befe764b4fcdb61e10d5ad380d40a\transformed\jetified-ui-test-manifest-1.6.1\AndroidManifest.xml:24:13-63
+84            android:exported="true" />
+84-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\adity\.gradle\caches\transforms-3\173befe764b4fcdb61e10d5ad380d40a\transformed\jetified-ui-test-manifest-1.6.1\AndroidManifest.xml:25:13-36
+85
+86        <provider
+86-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+87            android:name="androidx.startup.InitializationProvider"
+87-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
+88            android:authorities="com.datasentry.app.androidx-startup"
+88-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
+89            android:exported="false" >
+89-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
+90            <meta-data
+90-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+91                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+91-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+92                android:value="androidx.startup" />
+92-->[androidx.emoji2:emoji2:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\92ded70d295d6f2768a6f63264ad5000\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+93            <meta-data
+93-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\adity\.gradle\caches\transforms-3\7921d4fc873006f165cec6d91d6e5aea\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+94                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+94-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\adity\.gradle\caches\transforms-3\7921d4fc873006f165cec6d91d6e5aea\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+95                android:value="androidx.startup" />
+95-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\adity\.gradle\caches\transforms-3\7921d4fc873006f165cec6d91d6e5aea\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+96            <meta-data
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+97                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+98                android:value="androidx.startup" />
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+99        </provider>
+100
+101        <service
+101-->[androidx.room:room-runtime:2.6.1] C:\Users\adity\.gradle\caches\transforms-3\72616146986b29e55bbb83e3d42d6d2f\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+102            android:name="androidx.room.MultiInstanceInvalidationService"
+102-->[androidx.room:room-runtime:2.6.1] C:\Users\adity\.gradle\caches\transforms-3\72616146986b29e55bbb83e3d42d6d2f\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+103            android:directBootAware="true"
+103-->[androidx.room:room-runtime:2.6.1] C:\Users\adity\.gradle\caches\transforms-3\72616146986b29e55bbb83e3d42d6d2f\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+104            android:exported="false" />
+104-->[androidx.room:room-runtime:2.6.1] C:\Users\adity\.gradle\caches\transforms-3\72616146986b29e55bbb83e3d42d6d2f\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+105
+106        <receiver
+106-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+107            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+107-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+108            android:directBootAware="false"
+108-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+109            android:enabled="true"
+109-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+110            android:exported="true"
+110-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+111            android:permission="android.permission.DUMP" >
+111-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+112            <intent-filter>
+112-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+113                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+114            </intent-filter>
+115            <intent-filter>
+115-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+116                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+117            </intent-filter>
+118            <intent-filter>
+118-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+119                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+120            </intent-filter>
+121            <intent-filter>
+121-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+122                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\adity\.gradle\caches\transforms-3\241fb113cd4a6ff5872aea1280246c75\transformed\jetified-profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+123            </intent-filter>
+124        </receiver>
+125    </application>
+126
+127</manifest>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataSentry - Security Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .safety-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .status-indicator {
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-safe {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-caution {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .status-danger {
+            background: #ef4444;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .card h3 {
+            margin-bottom: 1rem;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .metric:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .risk-high { color: #ef4444; }
+        .risk-medium { color: #f59e0b; }
+        .risk-low { color: #10b981; }
+        .risk-critical { color: #dc2626; }
+        
+        .recommendations {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .recommendations h4 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+        
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recommendations li {
+            padding: 0.5rem 0;
+            color: #78350f;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 1rem;
+        }
+        
+        .threat-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .threat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #fee;
+            border-radius: 8px;
+            border-left: 4px solid #ef4444;
+        }
+        
+        .app-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: #f0f9ff;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .refresh-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            background: #2563eb;
+        }
+        
+        .last-updated {
+            text-align: center;
+            color: #6b7280;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ DataSentry Security Dashboard</h1>
+        <div class="safety-status">
+            <div id="statusIndicator" class="status-indicator">Loading...</div>
+            <div id="statusMessage">Checking security status...</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="grid">
+            <!-- Safety Assessment Card -->
+            <div class="card">
+                <h3>🔍 Safety Assessment</h3>
+                <div class="metric">
+                    <span>Privacy Score</span>
+                    <span id="privacyScore" class="metric-value">-</span>
+                </div>
+                <div class="metric">
+                    <span>Total Threats</span>
+                    <span id="totalThreats" class="metric-value">-</span>
+                </div>
+                <div class="metric">
+                    <span>Active Devices</span>
+                    <span id="activeDevices" class="metric-value">-</span>
+                </div>
+                <div id="recommendations" class="recommendations" style="display: none;">
+                    <h4>🚨 Recommendations</h4>
+                    <ul id="recommendationsList"></ul>
+                </div>
+            </div>
+            
+            <!-- Risk Distribution Card -->
+            <div class="card">
+                <h3>📊 Risk Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="riskChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Traffic Overview Card -->
+            <div class="card">
+                <h3>📈 Traffic Overview</h3>
+                <div class="metric">
+                    <span>Total Queries</span>
+                    <span id="totalQueries" class="metric-value">-</span>
+                </div>
+                <div class="metric">
+                    <span>Unique Domains</span>
+                    <span id="uniqueDomains" class="metric-value">-</span>
+                </div>
+                <div class="metric">
+                    <span>Recent Threats</span>
+                    <span id="recentThreats" class="metric-value">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- Critical Threats Card -->
+            <div class="card">
+                <h3>🚨 Critical Threats</h3>
+                <div id="criticalThreats" class="threat-list">
+                    <p style="color: #6b7280; text-align: center;">No critical threats detected</p>
+                </div>
+            </div>
+            
+            <!-- Risky Apps Card -->
+            <div class="card">
+                <h3>📱 Risky Applications</h3>
+                <div id="riskyApps" class="threat-list">
+                    <p style="color: #6b7280; text-align: center;">No risky apps detected</p>
+                </div>
+            </div>
+            
+            <!-- Recent Domains Card -->
+            <div class="card">
+                <h3>🌐 Recent Domains</h3>
+                <div id="recentDomains" class="threat-list">
+                    <p style="color: #6b7280; text-align: center;">Loading recent domains...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 2rem 0;">
+            <button class="refresh-btn" onclick="refreshData()">🔄 Refresh Data</button>
+        </div>
+        
+        <div class="last-updated" id="lastUpdated">
+            Last updated: Loading...
+        </div>
+    </div>
+    
+    <script>
+        let riskChart = null;
+        
+        async function fetchSafetyAssessment() {
+            try {
+                const response = await fetch('/api/safety-assessment');
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                updateSafetyStatus(data);
+                updateRecommendations(data.recommendations);
+                
+                return data;
+            } catch (error) {
+                console.error('Error fetching safety assessment:', error);
+                document.getElementById('statusIndicator').textContent = 'ERROR';
+                document.getElementById('statusIndicator').className = 'status-indicator status-danger';
+                document.getElementById('statusMessage').textContent = 'Failed to load safety data';
+            }
+        }
+        
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch('/api/dashboard/data');
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                updateDashboard(data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        }
+        
+        function updateSafetyStatus(data) {
+            const indicator = document.getElementById('statusIndicator');
+            const message = document.getElementById('statusMessage');
+            
+            indicator.textContent = data.safety_status;
+            indicator.className = `status-indicator status-${data.safety_status.toLowerCase()}`;
+            message.textContent = data.safety_message;
+            
+            document.getElementById('privacyScore').textContent = data.privacy_score + '%';
+            document.getElementById('totalThreats').textContent = data.total_threats;
+            
+            // Update critical threats
+            const threatsContainer = document.getElementById('criticalThreats');
+            if (data.critical_domains && data.critical_domains.length > 0) {
+                threatsContainer.innerHTML = data.critical_domains.map(domain => `
+                    <div class="threat-item">
+                        <div>
+                            <strong>${domain.domain}</strong>
+                            <br>
+                            <small>Score: ${domain.risk_score} | Queries: ${domain.query_count}</small>
+                        </div>
+                        <span class="risk-critical">CRITICAL</span>
+                    </div>
+                `).join('');
+            } else {
+                threatsContainer.innerHTML = '<p style="color: #6b7280; text-align: center;">No critical threats detected</p>';
+            }
+            
+            // Update risky apps
+            const appsContainer = document.getElementById('riskyApps');
+            if (data.risky_apps && data.risky_apps.length > 0) {
+                appsContainer.innerHTML = data.risky_apps.map(app => `
+                    <div class="app-item">
+                        <div>
+                            <strong>${app.app_name}</strong>
+                            <br>
+                            <small>Queries: ${app.total_queries} | Risk: ${app.risk_level}</small>
+                        </div>
+                        <span class="risk-high">HIGH</span>
+                    </div>
+                `).join('');
+            } else {
+                appsContainer.innerHTML = '<p style="color: #6b7280; text-align: center;">No risky apps detected</p>';
+            }
+            
+            document.getElementById('lastUpdated').textContent = `Last updated: ${new Date(data.last_updated).toLocaleString()}`;
+        }
+        
+        function updateRecommendations(recommendations) {
+            const container = document.getElementById('recommendations');
+            const list = document.getElementById('recommendationsList');
+            
+            if (recommendations && recommendations.length > 0) {
+                list.innerHTML = recommendations.map(rec => `<li>• ${rec}</li>`).join('');
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+        
+        function updateDashboard(data) {
+            const overview = data.overview || {};
+            
+            document.getElementById('activeDevices').textContent = overview.active_devices || 0;
+            document.getElementById('totalQueries').textContent = overview.total_queries || 0;
+            document.getElementById('uniqueDomains').textContent = overview.unique_domains || 0;
+            document.getElementById('recentThreats').textContent = overview.recent_threats || 0;
+            
+            // Update risk distribution chart
+            updateRiskChart(data.risk_distribution || {});
+            
+            // Update recent domains
+            const domainsContainer = document.getElementById('recentDomains');
+            if (data.recent_domains && data.recent_domains.length > 0) {
+                domainsContainer.innerHTML = data.recent_domains.slice(0, 10).map(domain => {
+                    const riskClass = domain.risk_level.toLowerCase() === 'critical' ? 'risk-critical' :
+                                     domain.risk_level.toLowerCase() === 'high' ? 'risk-high' :
+                                     domain.risk_level.toLowerCase() === 'medium' ? 'risk-medium' : 'risk-low';
+                    
+                    return `
+                        <div class="metric">
+                            <div>
+                                <strong>${domain.domain}</strong>
+                                <br>
+                                <small>Last seen: ${domain.last_seen}</small>
+                            </div>
+                            <span class="${riskClass}">${domain.risk_level}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                domainsContainer.innerHTML = '<p style="color: #6b7280; text-align: center;">No recent domains</p>';
+            }
+        }
+        
+        function updateRiskChart(riskDistribution) {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            
+            if (riskChart) {
+                riskChart.destroy();
+            }
+            
+            riskChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(riskDistribution),
+                    datasets: [{
+                        data: Object.values(riskDistribution),
+                        backgroundColor: [
+                            '#ef4444', // Critical
+                            '#f59e0b', // High
+                            '#fbbf24', // Medium
+                            '#10b981'  // Low
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function refreshData() {
+            const btn = document.querySelector('.refresh-btn');
+            btn.textContent = '🔄 Loading...';
+            btn.disabled = true;
+            
+            await Promise.all([
+                fetchSafetyAssessment(),
+                fetchDashboardData()
+            ]);
+            
+            btn.textContent = '🔄 Refresh Data';
+            btn.disabled = false;
+        }
+        
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            refreshData();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(refreshData, 30000);
+        });
+    </script>
+</body>
+</html>
